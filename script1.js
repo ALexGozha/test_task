@@ -93,6 +93,7 @@ commentsData.reverse()
 // console.log(a)
 
 
+
 const dataComments = b || commentsData
 
 
@@ -114,9 +115,9 @@ const dataComments = b || commentsData
       countLike: "29",
       minutesBefore: "4 minutos antes"
     }
-    commentsData.push(comment)
-    localStorage.setItem('savecoment',(JSON.stringify(commentsData,null,2)))
-    console.log(commentsData)
+    dataComments.push(comment)
+    localStorage.setItem('savecoment',(JSON.stringify(dataComments,null,2)))
+    console.log(dataComments)
     textComment.value = ''
     console.log(textComment)
     const newComment = document.createElement('div')
@@ -193,6 +194,7 @@ const dataComments = b || commentsData
   })
 
 for(let comm of dataComments){
+  if(comm.status !== 'disable' ){
   const comments = document.createElement('div')
   comments.innerHTML = `<div class="comments" id="#${comm.id}" style="display:block">
   <div class="profile">
@@ -254,14 +256,18 @@ for(let comm of dataComments){
   </div>
   </div>`
   comment0.after(comments)
-  
+  }
   
 }
- 
-
-
   console.log(comment0)
-  
+ 
+  const clearLocalStorege = document.querySelector('#clearYoreComment')
+
+  clearLocalStorege.addEventListener('click',()=>localStorage.clear())
+
+
+
+
   function init(){
   const commentButton = document.querySelector(' font > div > div:nth-child(5)')
   const btnClickHandler = () => {
@@ -273,18 +279,81 @@ commentButton.addEventListener('click',(event) => {
       const idcomment = event.target.parentNode.parentNode.parentNode.parentNode.id
       console.log(idcomment.slice(1,-1)+'delet')
 
-      const commentsData = commentsData.filter((com)=>  com.id.slice(0,-1) !== idcomment.slice(1,-1))
-      console.log(commentsData)
-      // for(let com of commentsData){
-      //   if(idcomment.slice(1,-1) == com.id.slice(0,-1)){
-      //     console.log(com)
-      //   }
-      // }
+      const deletComment = dataComments.filter((com)=>  com.id.slice(0,-1) == idcomment.slice(1,-1))
+      
+      deletComment[0].status = 'disable'
+      console.log(deletComment)
+      const deletBlock = document.getElementById(`#${deletComment[0].id}`)
+      deletBlock.style.display = 'none';
+      console.log(deletBlock)
+      localStorage.setItem('savecoment',(JSON.stringify(dataComments,null,2)))
     }
     if(event.target.hasAttribute('data-edit')){
       const idcomment = event.target.parentNode.parentNode.parentNode.parentNode.id
       console.log(idcomment+'edit')
+      const editBlock = document.querySelector(`#\\${idcomment} > div.comment-content > p:nth-child(2) > font > font`)
+      console.log(editBlock)
+      replaceTag(editBlock, 'textarea')
+
+      const ss = document.querySelector(`#\\${idcomment} > div.comment-content > p:nth-child(2) > font > textarea`)
+      console.log(ss.value)
+      ss.value = ''
+
+        const buttonOk = document.querySelector(`#\\${idcomment} > div.comment-content > p:nth-child(2) > font > div > div > div > font > font`)
+            buttonOk.addEventListener('click',()=>{
+              const editComment = dataComments.filter((com)=>  com.id.slice(0,-1) == idcomment.slice(1,-1))
+              editComment[0].textContent = ss.value
+              const block = document.querySelector(`#\\${idcomment} > div.comment-content > p:nth-child(2) > font`)
+              const perentBlock = block.parentElement
+              console.log(block)
+              console.log(perentBlock)
+              block.remove()
+              const newBlock = document.createElement('font')
+              newBlock.style = 'vertical-align: inherit'
+              newBlock.innerHTML =`<font style="vertical-align: inherit;">${ss.value}</font>`
+              perentBlock.appendChild(newBlock)
+              console.log(newBlock)
+              console.log(editComment[0].textContent)
+              console.log(dataComments)
+              localStorage.setItem('savecoment',(JSON.stringify(dataComments,null,2)))
+            })
     }
 })
 }
 init()
+
+// console.log(newDataComment)
+
+localStorage.setItem('savecoment',(JSON.stringify(dataComments,null,2)))
+
+
+        function replaceTag(element, newTagName) {
+              // Создаём новый тэг.
+              var newTag = document.createElement(newTagName);
+              console.log(element)
+              const button = document.createElement('div')
+              button.innerHTML = `<div class='wrapperButton'>
+              <div class="survey_button " >
+                <font style="vertical-align: inherit;">
+                  <font style="vertical-align: inherit;" data-ok='button'>ok</font>
+                </font>
+              </div>`
+
+              // Вставляем новый тэг перед старым.
+              element.parentElement.insertBefore(newTag, element);
+              element.parentElement.insertBefore(button, element);
+              // Переносим в новый тэг атрибуты старого с их значениями.
+              for (let i = 0, attrs = element.attributes, count = attrs.length; i < count; ++i)
+                  newTag.setAttribute(attrs[i].name, attrs[i].value);
+
+              // Переносим в новый тэг все дочерние элементы старого.
+              let childNodes = element.childNodes;
+              while (childNodes.length > 0)
+                  newTag.appendChild(childNodes[0]);
+
+              // Удаляем старый тэг.
+              element.parentElement.removeChild(element);
+       
+              
+        }
+
