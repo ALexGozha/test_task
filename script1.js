@@ -276,47 +276,49 @@ for(let comm of dataComments){
   
 commentButton.addEventListener('click',(event) => {
    if(event.target.hasAttribute('data-delet')){
-      const idcomment = event.target.parentNode.parentNode.parentNode.parentNode.id
-      console.log(idcomment.slice(1,-1)+'delet')
+    
+        const idcomment = event.target.parentNode.parentNode.parentNode.parentNode.id
+        console.log(idcomment.slice(1,-1)+'delet')
 
-      const deletComment = dataComments.filter((com)=>  com.id.slice(0,-1) == idcomment.slice(1,-1))
-      
-      deletComment[0].status = 'disable'
-      console.log(deletComment)
-      const deletBlock = document.getElementById(`#${deletComment[0].id}`)
-      deletBlock.style.display = 'none';
-      console.log(deletBlock)
-      localStorage.setItem('savecoment',(JSON.stringify(dataComments,null,2)))
+        const deletComment = dataComments.filter((com)=>  com.id.slice(0,-1) == idcomment.slice(1,-1))
+        
+        deletComment[0].status = 'disable'
+        console.log(deletComment)
+        const deletBlock = document.getElementById(`#${deletComment[0].id}`)
+        deletBlock.style.display = 'none';
+        console.log(deletBlock)
+        localStorage.setItem('savecoment',(JSON.stringify(dataComments,null,2)))
     }
     if(event.target.hasAttribute('data-edit')){
-      const idcomment = event.target.parentNode.parentNode.parentNode.parentNode.id
-      console.log(idcomment+'edit')
-      const editBlock = document.querySelector(`#\\${idcomment} > div.comment-content > p:nth-child(2) > font > font`)
-      console.log(editBlock)
-      replaceTag(editBlock, 'textarea')
+      if(event !== null){
+                    const idcomment = event.target.parentNode.parentNode.parentNode.parentNode.id
+                    console.log(idcomment+'edit')
+                    const editBlock = document.querySelector(`#\\${idcomment} > div.comment-content > p:nth-child(2) > font > font`)
+                    console.log(editBlock)
+                    replaceTag(editBlock, 'textarea')
+                    const ss = document.querySelector(`#\\${idcomment} > div.comment-content > p:nth-child(2) > font > textarea`)
+                    console.log(ss.value)
+                    ss.value = ''
 
-      const ss = document.querySelector(`#\\${idcomment} > div.comment-content > p:nth-child(2) > font > textarea`)
-      console.log(ss.value)
-      ss.value = ''
-
-        const buttonOk = document.querySelector(`#\\${idcomment} > div.comment-content > p:nth-child(2) > font > div > div > div > font > font`)
-            buttonOk.addEventListener('click',()=>{
-              const editComment = dataComments.filter((com)=>  com.id.slice(0,-1) == idcomment.slice(1,-1))
-              editComment[0].textContent = ss.value
-              const block = document.querySelector(`#\\${idcomment} > div.comment-content > p:nth-child(2) > font`)
-              const perentBlock = block.parentElement
-              console.log(block)
-              console.log(perentBlock)
-              block.remove()
-              const newBlock = document.createElement('font')
-              newBlock.style = 'vertical-align: inherit'
-              newBlock.innerHTML =`<font style="vertical-align: inherit;">${ss.value}</font>`
-              perentBlock.appendChild(newBlock)
-              console.log(newBlock)
-              console.log(editComment[0].textContent)
-              console.log(dataComments)
-              localStorage.setItem('savecoment',(JSON.stringify(dataComments,null,2)))
-            })
+                      const buttonOk = document.querySelector(`#\\${idcomment} > div.comment-content > p:nth-child(2) > font > div > div > div > font > font`)
+                          buttonOk.addEventListener('click',()=>{
+                            const editComment = dataComments.filter((com)=>  com.id.slice(0,-1) == idcomment.slice(1,-1))
+                            editComment[0].textContent = ss.value
+                            const block = document.querySelector(`#\\${idcomment} > div.comment-content > p:nth-child(2) > font`)
+                            const perentBlock = block.parentElement
+                            console.log(block)
+                            console.log(perentBlock)
+                            block.remove()
+                            const newBlock = document.createElement('font')
+                            newBlock.style = 'vertical-align: inherit'
+                            newBlock.innerHTML =`<font style="vertical-align: inherit;">${ss.value}</font>`
+                            perentBlock.appendChild(newBlock)
+                            console.log(newBlock)
+                            console.log(editComment[0].textContent)
+                            console.log(dataComments)
+                            localStorage.setItem('savecoment',(JSON.stringify(dataComments,null,2)))
+                          })
+                }                              
     }
 })
 }
